@@ -155,10 +155,11 @@ class ContextListener implements ListenerInterface
 
         foreach ($this->userProviders as $provider) {
             try {
-                $token->setUser($provider->refreshUser($user));
+                $refreshedUser = $provider->refreshUser($user);
+                $token->setUser($refreshedUser);
 
                 if (null !== $this->logger) {
-                    $this->logger->debug(sprintf('Username "%s" was reloaded from user provider.', $user->getUsername()));
+                    $this->logger->debug(sprintf('Username "%s" was reloaded from user provider.', empty($refreshedUser) ? $user->getUsername() : $refreshedUser->getUsername()));
                 }
 
                 return $token;
